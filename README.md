@@ -43,61 +43,34 @@ cd dbms-project-client
 npm install
 ```
 
-#### Install Tailwind CSS
-```bash
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-```
-
-#### Configure Tailwind
-Update `tailwind.config.js`:
-```js
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  darkMode: 'class',
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-```
-
-#### Add Tailwind to CSS
-In `src/index.css`:
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
 #### Run the frontend
 ```bash
-npm run dev
+npm start
 ```
 
 ---
+## 🐘 Install PostgreSQL & pgAdmin 4
 
-## 🧠 Install pgAdmin 4
+📥 Installing PostgreSQL
+Download PostgreSQL from the official site:
+👉 https://www.postgresql.org/download/
 
-pgAdmin is a GUI for PostgreSQL.
+Follow the installer instructions and note the following:
 
-### Windows
-1. Download from: https://www.pgadmin.org/download/pgadmin-4-windows/
-2. Install and launch
+Choose a username (default is postgres)
 
-### macOS (via Homebrew)
-```bash
-brew install --cask pgadmin4
-```
+Set a password
 
-### Linux (Debian-based)
-```bash
-sudo apt update
-sudo apt install pgadmin4
-```
+Default port is usually 5432
+
+After installation:
+
+Open pgAdmin 4 to connect to your PostgreSQL instance
+
+Create a new database named your_db_name
+
+⚠️ Make sure PostgreSQL service is running before you run the backend.
+
 
 ---
 
