@@ -56,13 +56,13 @@ Download PostgreSQL from the official site:
 👉 https://www.postgresql.org/download/
 
 Follow the installer instructions and note the following:
--Choose a username (default is postgres)
--Set a password
--Default port is usually 5432
+- Choose a username (default is postgres)
+- Set a password
+- Default port is usually 5432
 
 After installation:
--Open pgAdmin 4 to connect to your PostgreSQL instance
--Create a new database named your_db_name
+- Open pgAdmin 4 to connect to your PostgreSQL instance
+- Create a new database named your_db_name
 
 ⚠️ Make sure PostgreSQL service is running before you run the backend.
 
