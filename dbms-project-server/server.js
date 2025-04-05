@@ -23,7 +23,7 @@ app.get("/test", (req, res) => {
 
 // Sync database and start server
 sequelize
-  .sync({ force: false }) // Set to true only when resetting DB structure
+  .sync({ force: false })
   .then(() => {
     console.log("✅ Database connected and models synced!");
     app.listen(port, () => console.log(`🚀 Server running on port ${port}`));

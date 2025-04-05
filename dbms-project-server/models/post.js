@@ -1,3 +1,4 @@
+// models/post.js
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define("Post", {
     pid: {
@@ -8,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
     uid: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Users", // name of the referenced table
+        key: "uid",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
     imageUrl: {
       type: DataTypes.STRING,
