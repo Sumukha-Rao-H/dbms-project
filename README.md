@@ -32,7 +32,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/your_db_name
 
 #### Run the backend
 ```bash
-npm run dev
+npm start
 ```
 
 ### 2. Frontend (`dbms-project-client`)
