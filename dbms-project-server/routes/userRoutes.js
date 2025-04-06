@@ -5,12 +5,15 @@ const { registerUser } = require("../controllers/userController");
 const { sendMessage } = require("../controllers/messageController");
 const { createPost, addComment } = require("../controllers/postsController");
 const { sendFriendRequest } = require("../controllers/friendsController");
+const { getChatMessages } = require("../controllers/messageController");
 
-// Route: POST /api/register
 router.post("/register", registerUser);
 router.post("/sendMessage", sendMessage);
 router.post("/createPost", createPost);
 router.post("/addComment", addComment);
 router.post("/sendFriendRequest", sendFriendRequest);
+
+router.get("/getChatMessages", getChatMessages);
+
 
 module.exports = router;
