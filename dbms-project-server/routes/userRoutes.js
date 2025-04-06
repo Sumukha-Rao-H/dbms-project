@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { registerUser } = require("../controllers/userController");
 const { sendMessage, getChatMessages } = require("../controllers/messageController");
-const { createPost, addComment } = require("../controllers/postsController");
+const { createPost, addComment, getFriendsPosts } = require("../controllers/postsController");
 const { sendFriendRequest, updateFriend, getFriends } = require("../controllers/friendsController");
 
 router.post("/register", registerUser);
@@ -17,5 +17,6 @@ router.get("/getChatMessages", getChatMessages);
 
 router.post("/createPost", createPost);
 router.post("/addComment", addComment);
+router.get("/getFriendsPosts", getFriendsPosts);
 
 module.exports = router;

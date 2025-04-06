@@ -104,7 +104,11 @@ const updateFriend = async (req, res) => {
 };
 
 const getFriends = async (req, res) => {
-  const { uid } = req.query;
+  const uid = parseInt(req.query.uid, 10);
+
+  if (isNaN(uid)) {
+    return res.status(400).json({ error: "Valid numeric UID is required." });
+  }
 
   if (!uid) {
     return res.status(400).json({ error: "User UID is required." });
