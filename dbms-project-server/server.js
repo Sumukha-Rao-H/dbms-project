@@ -7,7 +7,7 @@ const { sequelize } = require("./db"); // Sequelize connection and model initial
 const userRoutes = require("./routes/userRoutes"); // Example route file
 
 const app = express();
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 8080;
 
 // Middleware
 app.use(cors());
