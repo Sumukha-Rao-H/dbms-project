@@ -103,7 +103,46 @@ const updateFriend = async (req, res) => {
   }
 };
 
+const getFriends = async (req, res) => {
+  const { uid } = req.query;
+
+  if (!uid) {
+    return res.status(400).json({ error: "User UID is required." });
+  }
+
+  try {
+    // Find all accepted friendships involving the user
+    const friends = await Friend.findAll({
+      where: {
+        status: "accepted",
+        [Op.or]: [{ user1uid: uid }, { user2uid: uid }],
+      },
+    });
+
+    // Extract friend UIDs
+    const friendUids = friends.map((friend) =>
+      friend.user1uid === uid ? friend.user2uid : friend.user1uid
+    );
+
+    // Get full user details of friends
+    const friendDetails = await User.findAll({
+      where: {
+        uid: {
+          [Op.in]: friendUids,
+        },
+      },
+      attributes: ["uid", "name"], // Adjust fields as needed
+    });
+
+    return res.status(200).json({ friends: friendDetails });
+  } catch (err) {
+    console.error("Error fetching friends:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
 module.exports = {
   sendFriendRequest,
   updateFriend,
+  getFriends,
 };
