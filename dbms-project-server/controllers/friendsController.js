@@ -57,6 +57,7 @@ const sendFriendRequest = async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
+
 const updateFriend = async (req, res) => {
   const { user1uid, user2uid, action } = req.body;
 
@@ -100,6 +101,42 @@ const updateFriend = async (req, res) => {
   } catch (err) {
     console.error("Error updating friend request:", err);
     res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+const getPendingRequests = async (req, res) => {
+  const uid = parseInt(req.query.uid, 10);
+
+  if (isNaN(uid)) {
+    return res.status(400).json({ error: "Valid numeric UID is required." });
+  }
+
+  try {
+    // ✅ Find all pending friend requests where user is the RECEIVER (user2uid)
+    const friends = await Friend.findAll({
+      where: {
+        status: "pending",
+        user2uid: uid,
+      },
+    });
+
+    // ✅ Extract UIDs of users who sent the request (user1uid)
+    const friendUids = friends.map((friend) => friend.user1uid);
+
+    // ✅ Fetch sender user details
+    const friendDetails = await User.findAll({
+      where: {
+        uid: {
+          [Op.in]: friendUids,
+        },
+      },
+      attributes: ["uid", "name"], // Adjust fields
+    });
+
+    return res.status(200).json({ friends: friendDetails });
+  } catch (err) {
+    console.error("Error fetching friends:", err);
+    return res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -149,4 +186,5 @@ module.exports = {
   sendFriendRequest,
   updateFriend,
   getFriends,
+  getPendingRequests,
 };
