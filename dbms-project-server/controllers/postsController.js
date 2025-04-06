@@ -39,7 +39,9 @@ const getFriendsPosts = async (req, res) => {
   const uid = parseInt(req.query.uid, 10);
 
   if (isNaN(uid)) {
-    return res.status(400).json({ message: "Valid numeric UID is required in query." });
+    return res
+      .status(400)
+      .json({ message: "Valid numeric UID is required in query." });
   }
 
   if (!uid) {
@@ -79,8 +81,31 @@ const getFriendsPosts = async (req, res) => {
   }
 };
 
+const getPostComments = async (req, res) => {
+  const pid = parseInt(req.query.pid, 10);
+
+  if (isNaN(pid)) {
+    return res
+      .status(400)
+      .json({ message: "Valid numeric PID is required in query." });
+  }
+
+  try {
+    const comments = await Comment.findAll({
+      where: { pid },
+      order: [["createdAt", "ASC"]],
+    });
+
+    res.status(200).json({ comments });
+  } catch (error) {
+    console.error("Error fetching post comments:", error);
+    res.status(500).json({ message: "Server error while fetching comments." });
+  }
+};
+
 module.exports = {
   createPost,
   addComment,
   getFriendsPosts,
+  getPostComments,
 };
