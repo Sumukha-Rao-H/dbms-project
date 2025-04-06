@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const { registerUser } = require("../controllers/userController");
+const { registerUser, loginUser } = require("../controllers/userController");
 const { sendMessage, getChatMessages } = require("../controllers/messageController");
 const { createPost, addComment, getFriendsPosts, getPostComments } = require("../controllers/postsController");
 const { sendFriendRequest, updateFriend, getFriends } = require("../controllers/friendsController");
 
 router.post("/register", registerUser);
+router.post("/login", loginUser);
 
 router.post("/sendFriendRequest", sendFriendRequest);
 router.post("/updateFriend", updateFriend);
