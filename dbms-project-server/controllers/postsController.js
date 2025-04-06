@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Post, Comment, Friend } = require("../db");
+const { Post, Comment, Friend, User } = require("../db");
 
 // Create a new post
 const createPost = async (req, res) => {
@@ -72,7 +72,22 @@ const getFriendsPosts = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    return res.status(200).json({ posts: friendPosts });
+    // Attach name using separate query
+    const postsWithNames = await Promise.all(
+      friendPosts.map(async (post) => {
+        const user = await User.findOne({
+          where: { uid: post.uid },
+          attributes: ["name"],
+        });
+
+        return {
+          ...post.toJSON(),
+          name: user ? user.name : null,
+        };
+      })
+    );
+
+    return res.status(200).json({ posts: postsWithNames });
   } catch (error) {
     console.error("Error fetching friends' posts:", error);
     res
@@ -91,12 +106,28 @@ const getPostComments = async (req, res) => {
   }
 
   try {
+    // Get all comments for the post
     const comments = await Comment.findAll({
       where: { pid },
       order: [["createdAt", "ASC"]],
     });
 
-    res.status(200).json({ comments });
+    // For each comment, get the user name using a separate query
+    const commentsWithUserNames = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await User.findOne({
+          where: { uid: comment.uid },
+          attributes: ["name"],
+        });
+
+        return {
+          ...comment.toJSON(),
+          name: user ? user.name : null,
+        };
+      })
+    );
+
+    res.status(200).json({ comments: commentsWithUserNames });
   } catch (error) {
     console.error("Error fetching post comments:", error);
     res.status(500).json({ message: "Server error while fetching comments." });
