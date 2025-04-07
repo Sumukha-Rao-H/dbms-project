@@ -158,7 +158,7 @@ export default function PostsPage() {
                       />
                     </div>
 
-                    {/* 💬 Dynamic Comment Section */}
+                    {/* Dynamic Comment Section */}
                     <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                       <h3 className="text-sm font-medium text-[#335765] dark:text-[#9fd3d0] mb-2">
                         Comments
