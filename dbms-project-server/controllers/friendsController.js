@@ -112,7 +112,6 @@ const getPendingRequests = async (req, res) => {
   }
 
   try {
-    // ✅ Find all pending friend requests where user is the RECEIVER (user2uid)
     const friends = await Friend.findAll({
       where: {
         status: "pending",
@@ -120,10 +119,8 @@ const getPendingRequests = async (req, res) => {
       },
     });
 
-    // ✅ Extract UIDs of users who sent the request (user1uid)
     const friendUids = friends.map((friend) => friend.user1uid);
 
-    // ✅ Fetch sender user details
     const friendDetails = await User.findAll({
       where: {
         uid: {

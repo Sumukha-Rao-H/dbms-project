@@ -1,6 +1,6 @@
 const { User, Setting, sequelize } = require("../db");
 
-// 🔁 Define trigger and function directly in this file
+// Define trigger and function directly in this file
 (async () => {
   try {
     await sequelize.query(`
@@ -41,13 +41,13 @@ const { User, Setting, sequelize } = require("../db");
       EXECUTE FUNCTION user_insert_trigger();
     `);
 
-    console.log("✅ User trigger created.");
+    console.log("User trigger created.");
   } catch (err) {
-    console.error("❌ Failed to create trigger:", err);
+    console.error("Failed to create trigger:", err);
   }
 })();
 
-// ✨ User registration (now simplified)
+// User registration (now simplified)
 const registerUser = async (req, res) => {
   try {
     const { name, age, email, password } = req.body;
@@ -110,11 +110,10 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error during login." });
   }
 };
-// controllers/settingsController.js
 
 const updateSettings = async (req, res) => {
   const { uid } = req.body;
-  const updates = req.body; // Contains fields like { theme, visibility, notificationEnabled }
+  const updates = req.body;
 
   if (!uid) {
     return res.status(400).json({ error: "Missing user ID (uid)" });
