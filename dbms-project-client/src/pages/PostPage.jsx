@@ -9,6 +9,9 @@ export default function PostsPage() {
   const [message, setMessage] = useState("");
   const [posts, setPosts] = useState([]);
 
+  const [comments, setComments] = useState({});
+  const [commentInputs, setCommentInputs] = useState({});
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -18,9 +21,9 @@ export default function PostsPage() {
           }`
         );
         const data = await res.json();
-
         if (res.ok) {
           setPosts(data.posts);
+          data.posts.forEach((post) => fetchComments(post.id));
         } else {
           console.error("Error:", data.message);
         }
@@ -33,6 +36,44 @@ export default function PostsPage() {
       fetchPosts();
     }
   }, [selectedTab, user]);
+
+  const fetchComments = async (pid) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/getPostComments?pid=${pid}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setComments((prev) => ({ ...prev, [pid]: data.comments }));
+      }
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    }
+  };
+
+  const handleAddComment = async (pid) => {
+    const comment = commentInputs[pid]?.trim();
+    if (!comment) return;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/addComment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pid, uid: user.uid, comment }),
+        }
+      );
+
+      if (res.ok) {
+        setCommentInputs((prev) => ({ ...prev, [pid]: "" }));
+        fetchComments(pid); // refresh comments after posting
+      }
+    } catch (err) {
+      console.error("Failed to post comment", err);
+    }
+  };
+
   const handleCreatePost = async (e) => {
     e.preventDefault();
 
@@ -100,56 +141,70 @@ export default function PostsPage() {
         <main className="flex-1 p-6 overflow-y-auto">
           {selectedTab === "feed" ? (
             <div className="space-y-6">
-              {posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="bg-white p-4 rounded-xl shadow-md dark:bg-[#2f2f2f] space-y-4"
-                >
-                  <div className="text-sm text-[#74a8a4] dark:text-[#9fd3d0]">
-                    {post.name || "Unknown"}
-                  </div>
-                  <div className="w-full flex justify-center items-center bg-black/5 rounded-md">
-                    <img
-                      src={post.imageUrl}
-                      alt={`${post.name}'s post`}
-                      className="max-w-full max-h-[500px] object-contain rounded-md"
-                    />
-                  </div>
-
-                  {/* 💬 Comment Section */}
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <h3 className="text-sm font-medium text-[#335765] dark:text-[#9fd3d0] mb-2">
-                      Comments
-                    </h3>
-
-                    {/* 🧪 Mock Comments */}
-                    <div className="space-y-2 mb-3">
-                      <div className="text-sm text-gray-800 dark:text-gray-300">
-                        <span className="font-semibold">alex:</span> Nice photo!
-                      </div>
-                      <div className="text-sm text-gray-800 dark:text-gray-300">
-                        <span className="font-semibold">lily:</span> Love this
-                        view 😍
-                      </div>
+              {posts.map((post) => {
+                return (
+                  <div
+                    key={post.pid}
+                    className="bg-white p-4 rounded-xl shadow-md dark:bg-[#2f2f2f] space-y-4"
+                  >
+                    <div className="text-sm text-[#74a8a4] dark:text-[#9fd3d0]">
+                      {post.name || "Unknown"}
                     </div>
-
-                    {/* ➕ Add Comment */}
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="text"
-                        placeholder="Add a comment..."
-                        className="flex-1 px-3 py-2 rounded-lg border border-[#74a8a4] focus:outline-none focus:ring-2 focus:ring-[#335765] dark:bg-[#2a2f2f] dark:border-[#4f6666] dark:text-white"
+                    <div className="w-full flex justify-center items-center bg-black/5 rounded-md">
+                      <img
+                        src={post.imageUrl}
+                        alt={`${post.name}'s post`}
+                        className="max-w-full max-h-[500px] object-contain rounded-md"
                       />
-                      <button className="bg-[#335765] text-white px-3 py-2 rounded-lg hover:bg-[#274852] transition dark:bg-[#4a707a] dark:hover:bg-[#3f5f66]">
-                        Post
-                      </button>
+                    </div>
+
+                    {/* 💬 Dynamic Comment Section */}
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <h3 className="text-sm font-medium text-[#335765] dark:text-[#9fd3d0] mb-2">
+                        Comments
+                      </h3>
+
+                      <div className="space-y-2 mb-3">
+                        {(comments[post.pid] || []).map((c, cid) => (
+                          <div
+                            key={cid}
+                            className="text-sm text-gray-800 dark:text-gray-300"
+                          >
+                            <span className="font-semibold">
+                              {c.name || "User"}:
+                            </span>{" "}
+                            {c.comment}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="text"
+                          value={commentInputs[post.pid] || ""}
+                          onChange={(e) =>
+                            setCommentInputs((prev) => ({
+                              ...prev,
+                              [post.pid]: e.target.value,
+                            }))
+                          }
+                          placeholder="Add a comment..."
+                          className="flex-1 px-3 py-2 rounded-lg border border-[#74a8a4] focus:outline-none focus:ring-2 focus:ring-[#335765] dark:bg-[#2a2f2f] dark:border-[#4f6666] dark:text-white"
+                        />
+                        <button
+                          onClick={() => handleAddComment(post.pid)}
+                          className="bg-[#335765] text-white px-3 py-2 rounded-lg hover:bg-[#274852] transition dark:bg-[#4a707a] dark:hover:bg-[#3f5f66]"
+                        >
+                          Post
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
-            // Keep your "Create Post" section unchanged
+            // Create Post Section
             <div className="flex justify-center items-center h-full">
               <div className="w-full max-w-md bg-[#f0f7f4] dark:bg-[#2a2f2f] p-8 rounded-2xl shadow-md space-y-6">
                 <h2 className="text-2xl font-bold text-center text-[#335765] dark:text-white">
