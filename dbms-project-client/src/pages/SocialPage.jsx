@@ -29,7 +29,7 @@ export default function SocialPage() {
     };
 
     fetchIncomingRequests();
-  }, [tab]);
+  }, [tab,user]);
 
   const handleSendRequest = async () => {
     const senderUid = user.uid; // TODO: Replace with actual UID from auth

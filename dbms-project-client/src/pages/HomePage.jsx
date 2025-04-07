@@ -24,7 +24,7 @@ export default function HomePage() {
     };
 
     fetchFriends();
-  }, []);
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-[#dbe2dc] text-[#335765] dark:bg-[#1e1e1e] dark:text-[#dbe2dc]">

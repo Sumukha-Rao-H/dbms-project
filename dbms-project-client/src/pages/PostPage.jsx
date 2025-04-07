@@ -30,7 +30,7 @@ export default function PostsPage() {
     if (selectedTab === "feed") {
       fetchPosts();
     }
-  }, [selectedTab]);
+  }, [selectedTab, user]);
   const handleCreatePost = async (e) => {
     e.preventDefault();
 
