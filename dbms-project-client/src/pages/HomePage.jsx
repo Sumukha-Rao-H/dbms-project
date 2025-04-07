@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
 import TopNavbar from "../components/TopNavbar";
+import { useAuth } from "../context/AuthContext";
 
 export default function HomePage() {
+  const { user } = useAuth(); // Assuming you have a user context to get the logged-in user's info
   const [friends, setFriends] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const uid = 1; // TODO: Replace with real user ID from auth
+        const uid = user.uid; // Get the user ID from the context
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getFriends?uid=${uid}`);
         const data = await response.json();
         setFriends(data.friends);
         if (data.friends.length > 0) {
           setSelectedUser(data.friends[0]);
         }
+        console.log(user);
       } catch (error) {
         console.error("Failed to fetch friends:", error);
       }

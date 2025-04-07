@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import TopNavbar from "../components/TopNavbar";
+import { useAuth } from "../context/AuthContext";
 
 export default function PostsPage() {
+  const { user } = useAuth(); // Assuming you have a user context to get the logged-in user's info
   const [selectedTab, setSelectedTab] = useState("feed");
   const [imageUrl, setImageUrl] = useState("");
   const [message, setMessage] = useState("");
@@ -11,7 +13,7 @@ export default function PostsPage() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/getFriendsPosts?uid=1`
+          `${import.meta.env.VITE_BACKEND_URL}/api/getFriendsPosts?uid=${user.uid}`,
         );
         const data = await res.json();
 
@@ -46,7 +48,7 @@ export default function PostsPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            uid: 2, // You need to ensure currentUser is available
+            uid: user.uid, // You need to ensure currentUser is available
             imageUrl,
           }),
         }

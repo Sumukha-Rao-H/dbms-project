@@ -1,7 +1,9 @@
 import React from "react";
 import TopNavbar from "../components/TopNavbar";
+import { useAuth } from "../context/AuthContext";
 
 export default function SocialPage() {
+  const { user } = useAuth(); // Assuming you have a user context to get the logged-in user's info
   const [tab, setTab] = React.useState("send");
   const [receiverUid, setReceiverUid] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -14,7 +16,7 @@ export default function SocialPage() {
         try {
           setLoadingIncoming(true);
           const res = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/api/getPendingRequests?uid=3`
+            `${import.meta.env.VITE_BACKEND_URL}/api/getPendingRequests?uid=${user.uid}`,
           );
           const data = await res.json();
           setIncomingFriends(data.friends);
@@ -30,7 +32,7 @@ export default function SocialPage() {
   }, [tab]);
 
   const handleSendRequest = async () => {
-    const senderUid = 1; // TODO: Replace with actual UID from auth
+    const senderUid = user.uid; // TODO: Replace with actual UID from auth
     if (!receiverUid.trim()) {
       setMessage("Please enter a UID.");
       return;
@@ -70,7 +72,7 @@ export default function SocialPage() {
         },
         body: JSON.stringify({
           user1uid,
-          user2uid: 3,
+          user2uid: user.uid,
           action,
         }),
       });

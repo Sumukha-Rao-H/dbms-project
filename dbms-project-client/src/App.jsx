@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { useAuth } from "./context/AuthContext";
 
 export default function App() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [activeForm, setActiveForm] = React.useState(null);
 
@@ -44,6 +46,7 @@ export default function App() {
       } else {
         setLoginError("");
         console.log("Logged in user:", data.user);
+        login(data.user); // Store user data in context
         navigate("/home"); // Redirect to home on success
       }
     } catch (err) {
