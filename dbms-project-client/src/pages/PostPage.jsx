@@ -13,7 +13,9 @@ export default function PostsPage() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/getFriendsPosts?uid=${user.uid}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/getFriendsPosts?uid=${
+            user.uid
+          }`
         );
         const data = await res.json();
 
@@ -106,11 +108,13 @@ export default function PostsPage() {
                   <div className="text-sm text-[#74a8a4] dark:text-[#9fd3d0]">
                     {post.name || "Unknown"}
                   </div>
-                  <img
-                    src={post.imageUrl}
-                    alt={`${post.name}'s post`}
-                    className="w-full h-auto rounded-md"
-                  />
+                  <div className="w-full flex justify-center items-center bg-black/5 rounded-md">
+                    <img
+                      src={post.imageUrl}
+                      alt={`${post.name}'s post`}
+                      className="max-w-full max-h-[500px] object-contain rounded-md"
+                    />
+                  </div>
 
                   {/* 💬 Comment Section */}
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
