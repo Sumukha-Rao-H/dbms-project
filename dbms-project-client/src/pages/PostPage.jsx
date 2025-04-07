@@ -23,7 +23,7 @@ export default function PostsPage() {
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);
-          data.posts.forEach((post) => fetchComments(post.id));
+          data.posts.forEach((post) => fetchComments(post.pid));
         } else {
           console.error("Error:", data.message);
         }
