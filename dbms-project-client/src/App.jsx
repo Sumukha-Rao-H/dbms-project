@@ -107,7 +107,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#dbe2dc] text-[#335765] px-4">
-      <h1 className="text-4xl font-bold mb-6">Welcome to ChatMate</h1>
+      <h1 className="text-4xl font-bold mb-6">Welcome to SocialBird</h1>
 
       {!activeForm && (
         <div className="space-x-4">
