@@ -84,7 +84,9 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required." });
+    return res
+      .status(400)
+      .json({ message: "Email and password are required." });
   }
 
   try {
@@ -108,8 +110,60 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error during login." });
   }
 };
+// controllers/settingsController.js
+
+const updateSettings = async (req, res) => {
+  const { uid } = req.body;
+  const updates = req.body; // Contains fields like { theme, visibility, notificationEnabled }
+
+  if (!uid) {
+    return res.status(400).json({ error: "Missing user ID (uid)" });
+  }
+
+  try {
+    // Check if settings exist for the user
+    const setting = await Setting.findOne({ where: { uid } });
+
+    if (!setting) {
+      return res.status(404).json({ error: "Settings not found for user" });
+    }
+
+    // Update fields
+    await setting.update(updates);
+
+    return res
+      .status(200)
+      .json({ message: "Settings updated successfully", setting });
+  } catch (error) {
+    console.error("Error updating settings:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getSettings = async (req, res) => {
+  const { uid } = req.query;
+
+  try {
+    const settings = await Setting.findOne({ where: { uid } });
+
+    if (!settings) {
+      return res.status(404).json({ message: "Settings not found" });
+    }
+
+    return res.status(200).json({
+      theme: settings.theme,
+      visibility: settings.visibility,
+      notificationEnabled: settings.notificationEnabled,
+    });
+  } catch (error) {
+    console.error("Error fetching settings:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
   registerUser,
   loginUser,
+  updateSettings,
+  getSettings,
 };
