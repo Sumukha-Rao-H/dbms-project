@@ -13,6 +13,7 @@ import ProfilePage from "./pages/ProfilePage";
 import PostsPage from "./pages/PostPage";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -20,10 +21,42 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/social" element={<SocialPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/posts" element={<PostsPage />} />
+          
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/social"
+            element={
+              <ProtectedRoute>
+                <SocialPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/posts"
+            element={
+              <ProtectedRoute>
+                <PostsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>

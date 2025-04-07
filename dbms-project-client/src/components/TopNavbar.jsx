@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function TopNavbar() {
+  const { logout } = useAuth();
   const navigate = useNavigate();
   return (
     <div className="w-full bg-[#335765] text-white px-6 py-3 flex justify-between items-center shadow dark:bg-[#1f2b30]">
@@ -31,7 +33,10 @@ export default function TopNavbar() {
         </button>
       </div>
       <button
-        onClick={() => navigate("/")}
+        onClick={() => {
+          logout();
+          navigate("/");
+        }}
         className="text-[lavender] hover:text-red-600 transition"
       >
         Logout
